@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Submitter</title>
+</head>
+<body>
+  <h2>Getting your location...</h2>
+  <script>
+    // Replace with your Google Form URL
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeXXXXX/formResponse';
+
+    // Replace with your actual Google Form field IDs
+    const latEntry = 'entry.123456789'; 
+    const lonEntry = 'entry.987654321';
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        const formData = new FormData();
+        formData.append(latEntry, latitude);
+        formData.append(lonEntry, longitude);
+
+        fetch(formUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        }).then(() => {
+          document.body.innerHTML = "<h2>Thanks! Your location has been submitted.</h2>";
+        }).catch(() => {
+          document.body.innerHTML = "<h2>Something went wrong. Please try again.</h2>";
+        });
+      }, function(error) {
+        document.body.innerHTML = "<h2>Location permission denied.</h2>";
+      });
+    } else {
+      document.body.innerHTML = "<h2>Geolocation is not supported by your browser.</h2>";
+    }
+  </script>
+</body>
+</html>
